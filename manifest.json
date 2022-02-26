@@ -10,7 +10,7 @@
     "activeTab"
   ],
   "content_scripts": [{
-    "matches": ["https://discord.com/*"],
+    "matches": ["https://discord.com/channels/*"],
     "js": [
       "jquery.min.js",
       "content.js"

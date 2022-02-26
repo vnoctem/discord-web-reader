@@ -3,25 +3,51 @@ jQuery(function() {
   console.log(`vgrtest Loading script for extension ${extensionId}...`);
 
   // Select the target node (ol class scrollerInner)
-  var target = $('main[class*="chatContent"]').get(0);
+  //let target = $('div[class*="chatContent"]').get(0);
+  let target = $('#app-mount').get(0);
   console.log('vgrtest target: ', target);
 
   // Create an observer instance
-  var observer = new MutationObserver(function(mutations) {
+  let observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
 
-      // Get the Twitter modal window replies count
-      /* var loneTweetsCount = $('.PermalinkOverlay-body .ThreadedConversation--loneTweet .tweet').length
-      var threadedTweetsCount = $('.PermalinkOverlay-body .ThreadedConversation .tweet').length
-      var total = loneTweetsCount + threadedTweetsCount */
+      // Get message elements
       let messageElements = $('li[class*="messageListItem"]');
-      let latestMessageElement = messageElements.get(messageElements.length - 1);
-      console.log('vgrtest latestMessageElement: ', latestMessageElement);
+
+      // Get most recent message element
+      let recentMessageElement = messageElements.get(messageElements.length - 1);
+      console.log('vgrtest recentMessageElement: ', recentMessageElement);
 
       // Get alert from message element
-      let messageText = $(latestMessageElement).find('div[id*="message-content"]').html();
-      
-      //if (messageText)
+      let messageText = $(recentMessageElement).find('div[id*="message-content"]');
+      let strongElements = $(messageText).find('strong');
+
+      let alert = {
+        symbol: '',
+        strike: '',
+        side: '',
+        date: '',
+        quantityAndCost: ''
+      };
+
+      alert.symbol = strongElements.get(0).textContent;
+      alert.strike = strongElements.get(1).textContent;
+      alert.side = strongElements.get(2).textContent;
+      alert.date = strongElements.get(3).textContent;
+      alert.quantityAndCost = strongElements.get(4).textContent;
+
+      /* $(strongElements).each(function(index) {
+        console.log(index + ' : vgrtest - ' + $(this).text());
+      });
+      console.log('strongElements: ', strongElements); */
+
+      console.log('vgrtest alert object: ', alert);
+
+      let isNewAlert = $(messageText).find('span[class*="emojiContainer"]').find('img[alt=":OSwhite:"').length > 0;
+      if (isNewAlert) {
+        console.log('vgrtest isNewAlert');
+        // TODO send new
+      }
 
       console.log('vgrtest alert: ', messageText);
 
@@ -31,13 +57,12 @@ jQuery(function() {
   });
 
   // Configuration of the observer
-  var config = { attributes: true, subtree: true };
+  let config = { attributes: true, subtree: true };
 
   // Pass in the target node, as well as the observer options
-  observer.observe(document, config);
+  observer.observe(target, config);
   
   //chrome.runtime.sendMessage(extensionId, 'vgrtest Hello test', function(response) {});
-  
   
   console.log("vgrtest Script loaded...");
 
